@@ -1,0 +1,6 @@
+<?php
+$prof2 = new Profile();
+$prof2->initWithUsername($GLOBALS["view_username"]);
+var_dump($prof2);
+?>
+<h2>Index</h2>

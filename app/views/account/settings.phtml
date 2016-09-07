@@ -1,0 +1,62 @@
+<?php
+$profile = Profile::GetLoggedIn();
+?>
+<section class="main">
+	<div class="row">
+		<div class="col col-lg-12">
+			<h2>User Settings</h2>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col col-lg-12">
+			<hr/>
+			<h3>Profile Page</h3>
+			<p>Customise the look and feel of your profile page</p>
+			<br/>
+			<h4>Display Name</h4>
+			<p class="small">Change your name</p>
+			<form id="name-form">
+				<div class="form-group">
+					<input type="text" class="form-control" placeholder="Your Name" value="<?php echo $profile->name; ?>">
+				</div>
+			</form>
+			<a class="btn btn-success btn-xs btn-save" data-form="name-form"><i class="fa fa-save"></i> Save</a>
+			<br/>
+			<h4>Cover Photo</h4>
+			<p class="small">Upload a cover photo to make your profile page stand out (recommended resolution: 1140x400 pixels).</p>
+			<form id="cover-photo-upload" action="#">
+				<div class="form-group">
+					Upload a new Cover Photo<input name="cover-photo" type="file">
+				</div>
+			</form>
+			<a class="btn btn-success btn-xs btn-save" data-form="cover-photo-upload"><i class="fa fa-save"></i> Save</a>
+			<br/>
+			<h4>Biography</h4>
+			<form id="biography-update" action="#">
+				<div class="form-group">
+					<textarea class="form-control" placeholder="Tell your story..." name="bio"><?php echo $profile->bio; ?></textarea>
+				</div>
+			</form>
+			<a class="btn btn-success btn-xs btn-save" data-form="biography-update"><i class="fa fa-save"></i> Save</a>
+			<br/>
+			<h4>Connected Accounts</h4>
+			<div class="row">
+				<div class="col col-lg-6 col-md-8 col-sm-12">
+					<table class="table">
+						<tr>
+							<th>Platform</th>
+							<th>Link</th>
+							<th>Delete</th>
+						</tr>
+						<tr>
+							<td>Facebook</td>
+							<td><a href="https://www.facebook.com/cairns.pc" target="_blank">https://www.facebook.com/cairns.pc <i class="fa fa-external-link"></i></a></td>
+							<td><a class="btn btn-danger btn-xs btn-delete-connected-account" data-account-id="1"><i class="fa fa-trash"></i> Delete</a></td>
+						</tr>
+					</table>
+					<a class="btn btn-success btn-xs btn-add-connected-account"><i class="fa fa-plus"></i> Add Account</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

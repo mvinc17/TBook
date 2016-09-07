@@ -1,0 +1,292 @@
+body {
+  padding-top: 50px;
+  overflow-x: hidden;
+}
+.starter-template {
+  padding: 40px 15px;
+  text-align: center;
+}
+pre {
+  display: inline;
+  padding: 2px;
+}
+.form-horizontal .form-group {
+  margin-left: -8.5px;
+  margin-right: -8.5px;
+}
+.post-card {
+  overflow-x: hidden;
+}
+.post-card .card-img {
+  min-height: 250px;
+  background-position: center center;
+  background-size: cover;
+}
+.already-liked {
+  transition: all 0.1s;
+}
+.already-liked::after {
+  content: " (You've liked this)";
+}
+.already-liked:hover {
+  color: #fff;
+  background-color: #f04124;
+  border-color: #ea2f10;
+}
+.no-file-selected:before {
+  content: "Upload a Photo";
+}
+.no-file-selected:after {
+  content: attr(data-filename);
+}
+.profile-image {
+  height: 200px;
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  border: 3px solid white;
+}
+li.profile-preview {
+  min-height: 120px;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  position: relative;
+  transition: all 0.2s;
+}
+li.profile-preview a.profile-preview-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+li.profile-preview a.profile-preview-link .profile-preview-username {
+  position: absolute;
+  bottom: 20px;
+  left: 15px;
+  color: white;
+  font-size: 20px;
+  text-shadow: 2px 2px 5px #323232;
+}
+li.profile-preview .remove-member-btn {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  z-index: -1;
+  opacity: 0;
+  transition: all 0.2s;
+}
+li.profile-preview:hover {
+  -webkit-filter: brightness(1.1);
+  filter: brightness(1.1);
+}
+li.profile-preview:hover .remove-member-btn {
+  left: -21px;
+  opacity: 1;
+}
+li.other-message-group {
+  min-height: 35px;
+  transition: all 0.2s;
+  position: relative;
+  /* Chat things */
+}
+li.other-message-group a.other-group-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  color: white;
+  font-size: 20px;
+  padding-top: 3px;
+  text-shadow: 2px 2px 5px #323232;
+  padding-left: 15px;
+  transition: all 0.2s;
+}
+li.other-message-group a.other-group-link:hover {
+  text-decoration: none;
+  text-shadow: 2px 2px 10px #323232;
+}
+li.other-message-group:hover {
+  -webkit-filter: brightness(1.2);
+  filter: brightness(1.2);
+}
+.chat {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.chat li {
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+  border-bottom: 1px dotted #b3a9a9;
+}
+.chat li.left .chat-body {
+  margin-left: 60px;
+}
+.chat li.right .chat-body {
+  margin-right: 60px;
+}
+.chat li .chat-body p {
+  margin: 0;
+  color: #777;
+}
+.panel .slidedown .glyphicon, .chat .glyphicon {
+  margin-right: 5px;
+}
+.panel-body {
+  overflow-y: scroll;
+  height: 500px;
+}
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #f5f5f5;
+}
+::-webkit-scrollbar {
+  width: 12px;
+  background-color: #f5f5f5;
+}
+::-webkit-scrollbar-thumb {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+  background-color: #555;
+}
+.chat-img img {
+  width: 45px;
+}
+.app-link {
+  cursor: pointer;
+}
+.message-group-block {
+  height: 150px;
+  position: relative;
+  transition: all 0.2s;
+}
+.message-group-block a.message-group-block-link {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+}
+.message-group-block a.message-group-block-link span {
+  position: absolute;
+  bottom: 20px;
+  left: 15px;
+  font-size: 25px;
+  color: white;
+  text-shadow: 2px 2px 5px #323232;
+  transition: all 0.2s;
+}
+.message-group-block a.message-group-block-link:hover span {
+  text-shadow: 2px 2px 10px #323232;
+}
+.message-group-block:hover {
+  filter: brightness(1.1);
+  -webkit-filter: brightness(1.1);
+}
+img.chat-img {
+  max-width: 100%;
+  max-height: 300px;
+}
+.feed-ad {
+  display: none;
+  height: 390px;
+  margin-left: 0px;
+  margin-right: 0px;
+  width: 100%;
+  background-size: cover;
+  position: relative;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  -webkit-box-shadow: 5px 5px 10px 0px rgba(50, 50, 50, 0.75);
+  -moz-box-shadow: 5px 5px 10px 0px rgba(50, 50, 50, 0.75);
+  box-shadow: 5px 5px 10px 0px rgba(50, 50, 50, 0.75);
+  transition: all 0.3s;
+}
+.feed-ad:hover {
+  -webkit-box-shadow: 5px 5px 21px 0px rgba(50, 50, 50, 0.75);
+  -moz-box-shadow: 5px 5px 21px 0px rgba(50, 50, 50, 0.75);
+  box-shadow: 5px 5px 21px 0px rgba(50, 50, 50, 0.75);
+}
+img.large-photo {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  max-height: 500px;
+  max-width: 600px;
+}
+.box-shadow {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  background: #fff;
+  padding: 10px;
+  margin-top: 10px;
+}
+.new-things a {
+  display: block;
+}
+.image-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+.sad-img {
+  max-height: 250px;
+}
+.footer {
+  position: relative;
+  color: white;
+  min-height: 400px;
+  /* fallback for old browsers */
+  background: #005c97;
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: -webkit-linear-gradient(to left, #005c97, #363795);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: linear-gradient(to left, #005c97, #363795);
+}
+.footer .footer-link {
+  color: white;
+  margin-right: 10px;
+}
+.footer .footer-link:hover {
+  color: white;
+  text-decoration: none;
+}
+.footer .footer-new {
+  color: white;
+  display: block;
+}
+.footer .footer-new:hover {
+  text-decoration: none;
+}
+.footer .pull-bottom {
+  position: absolute;
+  bottom: 20px;
+}
+.intro-row {
+  display: none;
+  margin-bottom: 15px;
+  /* fallback for old browsers */
+  background: #fc00ff;
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: -webkit-linear-gradient(to left top, #4776e6, #8e54e9);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: linear-gradient(to left top, #4776e6, #8e54e9);
+  color: white;
+  min-height: 300px;
+  margin-top: -5px;
+  position: relative;
+}
+.intro-row .vertical-center {
+  height: 113px;
+  position: absolute;
+  top: 50%;
+  margin-top: -56.5px;
+}
+.intro-row .vertical-center h2 {
+  font-size: 50px;
+}
+#mPHP-Content {
+  min-height: calc(100vh - 450px);
+}

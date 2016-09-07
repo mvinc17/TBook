@@ -1,0 +1,44 @@
+<?php
+global $album;
+?>
+<style>
+	.post-card h4, .post-card h6, .post-card .text-left, .post-card table, .post-card .comment-form, .post-parent {
+		display: none;
+	}
+</style>
+<h2 class="text-center"><?php echo $album->name; ?></h2>
+<p class="text-center"><?php echo $album->description; ?></p>
+<div class="row">
+	<div class="col col-sm-8 col-sm-offset-2">
+		<div class="well clearfix">
+			<h3>Post a Picture</h3>
+			<form class="new-post-form" action="#" method="POST" enctype="multipart/form-data">
+				<div class="form-group">
+					<textarea class="form-control" name="content" placeholder="Add a description..."></textarea>
+				</div>
+				<div class="form-group">
+					<input type="text" name="tagged" class="form-control" style="width:100%;" data-role="tagsinput" id="tagged-in" placeholder="Who were you with?">
+				</div>
+				<div class="form-group pull-left">
+					Upload a Photo<input name="post-image" type="file" class="new-post-file-input">
+				</div>
+				<input type="hidden" name="post-type" value="posttype.picture">
+				<input type="hidden" name="album-id" value="<?php echo $album->id; ?>">
+				<input type="submit" class="btn btn-success pull-right" value="Post">
+			</form>
+		</div>
+	</div>
+</div>
+<hr/>
+<?php
+foreach($album->posts as $post) {
+	?>
+	<a href="/photos/view/<?php echo $post->id; ?>">
+		<?php
+		control("DisplayPost", $post);
+		?>
+	</a>
+	<?php
+
+}
+?>

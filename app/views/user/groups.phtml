@@ -1,0 +1,46 @@
+<?php
+global $groups;
+?>
+<style>
+	.jumbotron {
+		position: relative;
+		background-size: cover;
+		min-height: 400px;
+		background-position: top 0px center;
+		background-repeat: no-repeat;
+		color:white;
+		margin-top: -4px;
+		cursor: pointer;
+	}
+	.jumbotron h2, .jumbotron h4 {
+		position: absolute;
+		left:20px;
+		text-shadow: 2px 2px 5px rgba(50, 50, 50, 1);
+	}
+	.jumbotron .profile-image {
+		box-shadow: 2px 2px 5px rgba(50, 50, 50, 1);
+	}
+	.group-description {
+		position: absolute;
+		bottom:15px;
+		right:15px;
+		left:400px;
+	}
+</style>
+<?php
+foreach($groups as $group) {
+	?>
+	<div class="jumbotron" style="background-image: url(/media/<?php echo $group->coverImg; ?>);" onclick="window.location.href = '/group/<?php echo $group->slug; ?>';">
+		<h2><?php echo $group->name; if(!Profile::IsInGroup(Profile::GetLoggedIn()->id, $group->id)) { ?> <a class="btn btn-sm btn-primary btn-join-group" data-group-id="<?php echo $group->id; ?>">Join</a><?php } ?></h2>
+		<p>
+			<img class="profile-image" src="/media/<?php echo $group->profileImg; ?>">
+		</p>
+		<p class="group-description">
+			<?php echo $group->description; ?>
+		</p>
+	</div>
+	<?php
+}
+?>
+<section class="main">
+</section>

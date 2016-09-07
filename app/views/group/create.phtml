@@ -1,0 +1,61 @@
+<h2 class="text-center">Create a Group</h2>
+<div class="row">
+	<div class="col col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
+		<form action="#" method="POST" id="createGroupForm">
+			<div class="form-group">
+				<input type="text" class="form-control" id="groupname" name="name" placeholder="Group Name">
+			</div>
+			<p id="group-name-taken" class="text-danger" style="display: none">
+				Sorry, but that group name has already been taken.
+			</p>
+			<div class="form-group">
+				<textarea id="groupdescription" class="form-control" name="description" placeholder="Group Description"></textarea>
+			</div>
+			<div class="form-group pull-left">
+				Cover Photo<input name="cover-photo" type="file">
+			</div>
+			<div class="form-group pull-left">
+				Group Logo<input name="logo-image" type="file">
+			</div>
+			<div class="form-group">
+				<input type="text" name="members" class="form-control" style="width:100%;" data-role="tagsinput" id="tagged-in" placeholder="Add members">
+			</div>
+			<input type="submit" class="form-control btn btn-block btn-success" value="Create Group">
+		</form>
+	</div>
+</div>
+<script>
+	$('#groupname').keyup(function() {
+		$.ajax({
+			url: '/ajax/check_group_exists/' + $(this).val().toLowerCase().replace(" ", "-"),
+			method: 'GET',
+			dataType: 'json',
+			success: function(data) {
+				if(data.data.exists) {
+					$("#group-name-taken").show();
+				} else {
+					$("#group-name-taken").hide();
+				}
+			}
+		});
+	});
+
+	$("#createGroupForm").submit(function(e) {
+		e.preventDefault();
+
+		$.ajax({
+			url: '/ajax/create_group',
+			method: 'POST',
+			data: new FormData( this ),
+			processData: false,
+			contentType: false,
+			dataType: 'json',
+			success: function(data) {
+				if(data.data.slug) {
+					window.location.href = '/group/' + data.data.slug;
+				}
+			}
+		});
+
+	});
+</script>

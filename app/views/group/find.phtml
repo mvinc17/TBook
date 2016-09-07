@@ -1,0 +1,56 @@
+<?php
+global $groups;
+?>
+<style>
+	.jumbotron {
+		position: relative;
+		background-size: cover;
+		min-height: 400px;
+		background-position: top 0px center;
+		background-repeat: no-repeat;
+		color:white;
+		margin-top: -4px;
+	}
+	.jumbotron h2, .jumbotron h4 {
+		position: absolute;
+		left:20px;
+		text-shadow: 2px 2px 5px rgba(50, 50, 50, 1);
+	}
+	.jumbotron .profile-image {
+		box-shadow: 2px 2px 5px rgba(50, 50, 50, 1);
+	}
+</style>
+<div class="row">
+	<div class="col col-sm-12">
+		<h2 class="text-center">Find a Group</h2>
+		<div class="row">
+			<div class="col col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
+				<form action="#" method="GET">
+					<div class="form-group">
+						<input class="form-control text-center" type="text" name="q" placeholder="Search for a group" value="<?php echo HTTP::GET("q"); ?>">
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col col-sm-12">
+				<p class="text-center">Can't find the group you're looking for? <a href="/group/create">Create a new group</a></p>
+			</div>
+		</div>
+	</div>
+</div>
+<hr/>
+<?php
+foreach($groups as $group) {
+	?>
+	<a href="/group/<?php echo $group->slug; ?>">
+		<div class="jumbotron" style="background-image: url(/media/<?php echo $group->coverImg; ?>)">
+			<h2><?php echo $group->name; if(!Profile::IsInGroup(Profile::GetLoggedIn()->id, $group->id)) { ?> <a class="btn btn-sm btn-primary btn-join-group" data-group-id="<?php echo $group->id; ?>">Join</a><?php } ?></h2>
+			<p>
+				<img class="profile-image" src="/media/<?php echo $group->profileImg; ?>">
+			</p>
+		</div>
+	</a>
+	<?php
+}
+?>

@@ -1,0 +1,290 @@
+<?php
+global $messageGroup;
+if(!in_array(Profile::GetLoggedIn(), $messageGroup->members)) {
+	view("error/403");
+} else {
+	?>
+	<div class="row">
+		<div class="col col-sm-3">
+			<h2><?php echo $messageGroup->name; ?></h2>
+			<h5>Members:</h5>
+			<ul class="list-unstyled">
+				<?php
+				foreach($messageGroup->members as $member) {
+					?>
+					<li class="profile-preview" style="background-image: url(/media/<?php echo $member->coverPic; ?>)">
+						<a class="profile-preview-link" href="/user/profile/<?php echo $member->username; ?>">
+							<span class="profile-preview-username">
+								<?php echo $member->name; ?>
+								<a class="remove-member-btn btn btn-xs btn-danger app-link"
+								   onclick="Chat.removeMember('<?php echo $member->username; ?>')">
+									X
+								</a>
+							</span>
+						</a>
+					</li>
+					<?php
+				}
+				?>
+				<li class="other-message-group" style="background-color: #27ae60">
+					<a class="other-group-link app-link" onclick="Chat.addMember();">
+						Add Person
+					</a>
+				</li>
+			</ul>
+			<h2>Other Chats</h2>
+			<ul class="list-unstyled">
+				<?php
+				foreach(MessageGroup::GetAllSubscribed() as $otherGroup) {
+					?>
+					<li class="other-message-group" style="background-color: #<?php echo $otherGroup->colour; ?>;">
+						<a class="other-group-link" href="/chat/messages/<?php echo $otherGroup->id; ?>">
+							<?php echo $otherGroup->name; ?>
+						</a>
+					</li>
+					<?php
+				}
+				?>
+			</ul>
+			<!-- Group Selection -->
+		</div>
+		<div class="col col-sm-9">
+			<!-- actual chat -->
+
+			<div class="panel panel-primary" style="margin-top: 21px;">
+				<div class="panel-heading">
+					<i class="fa fa-chat"></i> <?php echo $messageGroup->name; ?>
+				</div>
+				<div class="panel-body" id="chat-body-container">
+					<ul class="chat" id="chat-body">
+
+					</ul>
+				</div>
+				<div class="panel-footer">
+					<form id="send-message-form" action="#" method="POST" enctype="multipart/form-data">
+						<input name="image" type="file" id="message-image" style="display: none;" onkeydown="return false;">
+						<div class="input-group">
+							<span class="input-group-btn">
+                                <button tabindex="-1" class="btn btn-info btn-sm" id="upload-file" onkeydown="return false;"><i class="fa fa-cloud-upload"></i></button>
+                            </span>
+							<input id="message-content" type="text" class="form-control input-sm" placeholder="Type your message here..." name="message"/>
+                            <span class="input-group-btn">
+                                <input class="btn btn-warning btn-sm" id="send-chat" value="Send" type="submit">
+                            </span>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<audio id="new-msg-sound" src="/assets/message.mp3" style="display: none;" preload="metadata"></audio>
+
+	<script>
+		//Get messages for group
+
+		$("#message-content").keyup(function (e) {
+			console.log("TRIGGERED");
+			if (e.keyCode == 13) {
+
+				console.log("TRIGGERED TWICE!");
+				$("#send-message-form").submit();
+			}
+		});
+
+
+		$("#send-message-form").submit(function (e) {
+			e.preventDefault();
+
+			var message = $("#message-content").val();
+
+			Chat.postMessage(this);
+
+			$("#message-content").val("");
+
+		});
+
+		$("#upload-file").click(function(e) {
+			e.preventDefault();
+
+			$("#message-image").click();
+		});
+
+		var Chat = {
+			firstFetch: true,
+			chatGroupID: <?php echo $messageGroup->id; ?>,
+			lastFetch: null,
+			canPlaySound: true,
+			fetch: function () {
+				$.ajax({
+					url: '/ajax/get_messages/' + this.chatGroupID,
+					method: 'GET',
+					success: function (data) {
+						var parsed = $.parseJSON(data);
+
+						if (data != Chat.lastFetch) {
+							$("#chat-body").html("");
+
+							$.each(parsed.data.messages, function (index, message) {
+								Chat.renderMessage(message);
+							});
+							Chat.lastFetch = data;
+
+							$("#chat-body-container").scrollTop($("#chat-body-container").prop("scrollHeight"))
+
+							if (Chat.firstFetch) {
+								Chat.firstFetch = false;
+								window.setInterval(function () {
+									Chat.fetch();
+								}, 2000);
+								console.log("1st fetch");
+							} else {
+								console.log("2nd fetch / its differemt");
+								if (Chat.canPlaySound) {
+									$("#new-msg-sound").trigger("play");
+								}
+							}
+						}
+					}
+				})
+			},
+			renderMessage: function (message) {
+				var li = $('<li>').addClass("left clearfix");
+				var imgContainer = $('<span>').addClass("chat-img pull-left");
+				var img = $('<img>').attr("src", "/media/" + message.sender.profilePic).addClass("img-circle");
+				imgContainer.append(img);
+				li.append(imgContainer);
+
+				var chatBody = $('<div>').addClass("chat-body clearfix");
+				var header = $('<div>').addClass("header");
+				header.append($('<strong>').text(message.sender.name));
+				chatBody.append(header);
+				chatBody.append($('<p>').text(message.content));
+				if(message.media) {
+					var parts = message.media.split(".");
+					var ext = parts[parts.length - 1];
+
+					if(
+						ext.toLowerCase() == "jpg" ||
+						ext.toLowerCase() == "png" ||
+						ext.toLowerCase() == "gif"
+					) {
+						//Display an image
+
+						chatBody.append($('<img>').attr('src', '/media/' + message.media).addClass("chat-img app-link").click(function() {
+							chatImg(message.media);
+						}));
+					} else if(
+						ext.toLowerCase() == 'mp4'
+					) {
+						//Display a video
+
+						chatBody.append(
+							$('<video>').attr('src', '/media/' + message.media).addClass("chat-img").attr("autoplay", true).attr("loop", true).attr("muted", true).attr("controls", true)
+						);
+					} else {
+						//Display a link
+
+						chatBody.append($('<a>').addClass('app-link').html('Attachment <i class="fa fa-external-link"></i>').attr("target", "_blank").attr("href", "/media/" + message.media));
+					}
+				}
+
+				li.append(chatBody);
+
+				$("#chat-body").append(li);
+			},
+			addMember: function () {
+				BootstrapDialog.show({
+					message: 'Add user: <input type="text" placeholder="Username" class="form-control">',
+					movable: false,
+					closable: false,
+					buttons: [
+						{
+							label: 'Cancel',
+							action: function (dialogRef) {
+								dialogRef.close();
+							}
+						},
+						{
+							label: 'Okay',
+							cssClass: "btn btn-success",
+							action: function (dialogRef) {
+								var username = dialogRef.getModalBody().find('input').val();
+								dialogRef.close();
+								$.ajax({
+									url: '/ajax/add_member_to_message_group/' + Chat.chatGroupID,
+									method: 'POST',
+									data: {
+										username: username
+									},
+									success: function () {
+										window.reloadPage();
+									}
+								});
+							}
+						}
+					]
+				});
+
+			},
+			removeMember: function (username) {
+				BootstrapDialog.confirm('Are you sure you want to do that?', function (result) {
+					if (result) {
+						$.ajax({
+							url: '/ajax/remove_member_from_message_group/' + Chat.chatGroupID,
+							method: 'POST',
+							data: {
+								username: username
+							},
+							success: function () {
+								window.reloadPage();
+							}
+						});
+					}
+				});
+			},
+			postMessage: function (form) {
+
+				console.log($(form).serialize());
+
+				var content = $(form).find("#message-content").val();
+
+
+
+				var msg = {
+					sender: {
+						profilePic: App.me.profilePic,
+						name: App.me.name
+					},
+					content: content
+				};
+
+				Chat.renderMessage(msg);
+
+				//Temporarily disable the sound
+				Chat.canPlaySound = false;
+				window.setTimeout(function () {
+					Chat.canPlaySound = true;
+				}, 3000);
+
+				$.ajax({
+					url: '/ajax/post_message/' + Chat.chatGroupID,
+					method: 'POST',
+					data: new FormData( form ),
+					processData: false,
+					contentType: false,
+					success: function() {
+						//reloadPage();
+					}
+				});
+			}
+		};
+
+
+		$(window).load(function () {
+			Chat.fetch();
+		});
+	</script>
+	<?php
+}
+?>

@@ -1,0 +1,80 @@
+<?php
+global $group;
+?>
+<style>
+	.jumbotron {
+		position: relative;
+		background-image: url(/media/<?php echo $group->coverImg; ?>);
+		background-size: cover;
+		min-height: 400px;
+		background-position: top 0px center;
+		background-repeat: no-repeat;
+		color:white;
+		margin-top: -4px;
+	}
+	.jumbotron h2, .jumbotron h4 {
+		position: absolute;
+		left:20px;
+		text-shadow: 2px 2px 5px rgba(50, 50, 50, 1);
+	}
+	.jumbotron .profile-image {
+		box-shadow: 2px 2px 5px rgba(50, 50, 50, 1);
+	}
+</style>
+<div class="jumbotron">
+	<h2><?php echo $group->name; if(!Profile::IsInGroup(Profile::GetLoggedIn()->id, $group->id)) { ?> <a class="btn btn-sm btn-primary btn-join-group" data-group-id="<?php echo $group->id; ?>">Join</a><?php } ?></h2>
+	<p>
+		<img class="profile-image" src="/media/<?php echo $group->profileImg; ?>">
+	</p>
+</div>
+<section class="main">
+	<div class="row">
+		<div class="col col-lg-12">
+			<h3>About Us</h3>
+			<?php echo $group->description; ?>
+		</div>
+	</div>
+	<hr/>
+	<?php
+	if(Profile::IsInGroup(Profile::GetLoggedIn()->id, $group->id)) {
+		?>
+		<div class="row">
+			<h2 class="text-center">Posts in <?php echo $group->name; ?></h2>
+		</div>
+		<div class="row">
+			<div class="col col-md-12">
+				<div class="well clearfix">
+					<h3>Post an Update</h3>
+					<form class="new-post-form" action="#" method="POST" enctype="multipart/form-data">
+						<input type="hidden" name="group-id" value="<?php echo $group->id; ?>">
+						<div class="form-group">
+							<textarea class="form-control" name="content" placeholder="What's on your mind..."></textarea>
+						</div>
+						<div class="form-group">
+							<input type="text" name="tagged" class="form-control" style="width:100%;" data-role="tagsinput" id="tagged-in" placeholder="Who were you with?">
+						</div>
+						<div class="form-group pull-left">
+							Upload a Photo<input name="post-image" type="file" class="new-post-file-input">
+						</div>
+						<input type="submit" class="btn btn-success pull-right" value="Post">
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<?php
+			foreach(Posts::GetPostsInGroup($group->id) as $postID) {
+				control("DisplayPost", $postID);
+			}
+			?>
+		</div>
+		<?php
+	} else {
+		?>
+		<div class="row">
+			<h2 class="text-center">Join <?php echo $group->name; ?> to see posts</h2>
+		</div>
+		<?php
+	}
+	?>
+</section>

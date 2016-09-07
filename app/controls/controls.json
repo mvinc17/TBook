@@ -1,0 +1,26 @@
+[
+  {
+    "name": "getIP",
+    "files": [
+      "getip/ip.php"
+    ]
+  },
+  {
+    "name": "HelloWorld",
+    "files": [
+      "helloworld/HelloWorld.php"
+    ]
+  },
+  {
+    "name": "LoginForm",
+    "files": [
+      "loginform/LoginForm.php"
+    ]
+  },
+  {
+    "name": "DisplayPost",
+    "files": [
+      "post/Post.php"
+    ]
+  }
+]

@@ -1,0 +1,86 @@
+<?php
+global $messageGroups;
+?>
+<h2 class="text-center">Your Message Groups</h2>
+<div class="row">
+	<div class="message-group-block col col-lg-3 col-md-4 col-sm-2" style="background-color:#27ae60;">
+		<a class="message-group-block-link app-link" id="new-group-btn">
+			<span>
+				<i class="fa fa-plus"></i> New Group
+			</span>
+		</a>
+	</div>
+	<?php
+	foreach($messageGroups as $messageGroup) {
+		?>
+		<div class="message-group-block col col-lg-3 col-md-4 col-sm-2" style="background-color: #<?php echo $messageGroup->colour; ?>">
+			<a class="message-group-block-link" href="/chat/messages/<?php echo $messageGroup->id; ?>">
+				<span>
+					<?php echo $messageGroup->name; ?>
+				</span>
+			</a>
+		</div>
+		<?php
+	}
+	?>
+</div>
+
+<script>
+	var container = $('<div>');
+	var namecontainer = $('<div>').addClass("form-group");
+	var nameInput = $('<input>').addClass("form-control").attr("placeholder", "Chat Name");
+	namecontainer.append(nameInput);
+
+	container.append(namecontainer);
+
+	var emojicontainer = $('<div>').addClass("form-group");
+	var emojiinput = $('<input>').addClass("form-control").attr("placeholder", "Chat Emoji");
+	emojicontainer.append(emojiinput);
+
+	container.append(emojicontainer);
+
+	var colourcontainer = $('<div>').addClass("form-group");
+	var colourinput = $('<input>').addClass("form-control").attr("placeholder", "Chat Emoji");
+	colourcontainer.append(colourinput);
+	colourinput.pickAColor();
+
+	container.append(colourcontainer);
+
+	$("#new-group-btn").click(function() {
+		BootstrapDialog.show({
+			title: 'New Message Group',
+			message: container,
+			movable: false,
+			closable: false,
+			buttons: [
+				{
+					label: 'Cancel',
+					action: function(dialog) {
+						dialog.close();
+					}
+				},
+				{
+					label: 'Create',
+					cssClass: 'btn btn-success',
+					action: function(dialog) {
+						$.ajax({
+							url: '/ajax/new_message_group',
+							method: 'POST',
+							data: {
+								name: nameInput.val(),
+								colour: colourinput.val(),
+								emoji: emojiinput.val()
+							},
+							success: function(data) {
+								var parsed = $.parseJSON(data);
+								var messageGroup = parsed.data;
+								window.location.href = '/chat/messages/' + messageGroup.id;
+							}
+						});
+						dialog.close();
+					}
+				}
+			]
+		})
+	});
+</script>

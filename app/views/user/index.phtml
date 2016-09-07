@@ -1,0 +1,122 @@
+<?php
+global $profile;
+?>
+<style>
+	.jumbotron {
+		position: relative;
+		background-image: url(/media/<?php echo $profile->coverPic; ?>);
+		background-size: cover;
+		min-height: 400px;
+		background-position: top 0px center;
+		background-repeat: no-repeat;
+		color:white;
+		margin-top: -4px;
+	}
+	.jumbotron h2, .jumbotron h4 {
+		position: absolute;
+		left:20px;
+		text-shadow: 2px 2px 5px rgba(50, 50, 50, 1);
+	}
+	.jumbotron .profile-image {
+		box-shadow: 2px 2px 5px rgba(50, 50, 50, 1);
+	}
+</style>
+<div class="jumbotron">
+	<h2><?php echo $profile->name; ?> (@<?php echo $profile->username; ?>)</h2>
+	<p>
+		<img class="profile-image" src="/media/<?php echo $profile->profilePic; ?>">
+	</p>
+</div>
+<section class="main">
+	<div class="row">
+		<div class="col col-lg-8">
+			<h3>About Me</h3>
+			<?php echo $profile->bio; ?>
+		</div>
+		<div class="col col-lg-4">
+			<h3>My Profiles</h3>
+			<ul class="list-unstyled">
+				<?php
+				foreach(EntityManager::GetAllConnectedProfilesForUser($profile->id) as $connectedProfile) {
+					?>
+					<li style="color:<?php echo $connectedProfile->icon->colour; ?>">
+						<i class="fa fa-2x fa-fw <?php echo $connectedProfile->icon->icon; ?>"></i>
+						<h4 style="display: inline-block;">
+							<a target="_blank" style="color:<?php echo $connectedProfile->icon->colour; ?>" href="<?php echo $connectedProfile->url; ?>"><?php echo $connectedProfile->username; ?></a>
+						</h4>
+					</li>
+					<?php
+				}
+				?>
+			</ul>
+		</div>
+	</div>
+	<hr/>
+	<div class="row">
+		<h2 class="text-center"><?php echo $profile->name; ?>'s Posts</h2>
+	</div>
+	<?php
+	if(Session::GetUsername() == $profile->username) {
+		?>
+		<div class="row">
+			<div class="col col-md-12">
+				<div class="well clearfix">
+					<h3>Post an Update</h3>
+					<form class="new-post-form" action="#" method="POST" enctype="multipart/form-data">
+						<div class="form-group">
+							<textarea class="form-control" name="content" placeholder="What's on your mind..."></textarea>
+						</div>
+						<div class="form-group">
+							<input type="text" name="tagged" class="form-control" style="width:100%;" data-role="tagsinput" id="tagged-in" placeholder="Who were you with?">
+						</div>
+						<div class="form-group pull-left">
+							Upload a Photo<input name="post-image" type="file" class="new-post-file-input">
+						</div>
+						<input type="submit" class="btn btn-success pull-right" value="Post">
+					</form>
+				</div>
+			</div>
+		</div>
+		<?php
+	}
+	?>
+	<div class="row">
+		<?php
+			foreach(Posts::GetPostsForUser($profile->id) as $postID) {
+				control("DisplayPost", $postID);
+			}
+		?>
+	</div>
+	<hr/>
+	<div class="row">
+		<div class="col col-sm-12">
+			<h2 class="text-center"><?php echo $profile->username; ?>'s Albums</h2>
+			<?php
+			$albums = Album::GetAllForUser($profile->id);
+
+			if(count($albums) < 1) {
+				?>
+				<img class="image-center sad-img" src="/assets/img/sad.png">
+				<h4 class="text-center"><?php echo $profile->name; ?> doesn't have any albums...</h4>
+				<?php
+			}
+
+			foreach($albums as $album) {
+				?>
+				<div class="col-xs-12 col-sm-6 col-md-4">
+					<div class="thumbnail post-card">
+						<div class="card-img" style="background-image: url(/media/<?php echo $album->posts[0]->image; ?>)"></div>
+						<!--<img src="Skyline.jpg">-->				<div class="caption">
+							<h4><a href="/photos/album/<?php echo $album->id; ?>"><?php echo $album->name; ?></a></h4>
+							<p>
+								<?php echo $album->description; ?>
+							</p>
+						</div>
+					</div>
+				</div>
+				<?php
+			}
+			?>
+		</div>
+	</div>
+</section>

@@ -1,0 +1,33 @@
+<div class="row">
+	<div class="col col-sm-8 col-sm-offset-2">
+		<div class="well clearfix">
+			<h3>Create a New Album</h3>
+			<form id="newalbumform" action="#" method="POST">
+				<div class="form-group">
+					<input type="text" class="form-control" name="title" placeholder="Album Name">
+				</div>
+				<div class="form-group">
+					<textarea class="form-control" name="content" placeholder="Album Description"></textarea>
+				</div>
+				<input type="submit" class="btn btn-success pull-right" value="Create Album">
+			</form>
+		</div>
+	</div>
+</div>
+<script>
+	$("#newalbumform").submit(function(e) {
+		e.preventDefault();
+
+		$.ajax({
+			method: 'POST',
+			data: $(this).serialize(),
+			url: '/ajax/create_album',
+			dataType: 'json',
+			success: function(data) {
+				if(data.data.id) {
+					window.location.href = '/photos/album/' + data.data.id;
+				}
+			}
+		})
+	});
+</script>

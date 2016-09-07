@@ -1,0 +1,63 @@
+<?php
+global $post;
+?>
+<div class="row">
+	<div class="col col-sm-12">
+		<a href="/photos/album/<?php echo $post->albumID; ?>"><i class="fa fa-chevron-left"></i> Back to <?php echo $post->albumName; ?></a>
+	</div>
+</div>
+<img src="/media/<?php echo $post->image; ?>" class="large-photo">
+<hr/>
+<div class="row post-card">
+	<div class="col col-sm-6 col-sm-offset-3">
+		<div class="row">
+			<div class="col col-sm-10">
+				<h3><?php echo $post->posterProfile->name; ?>'s Photo</h3>
+				<p>
+					With <?php
+					foreach($post->tagged as $index=>$tagged) {
+						if($index != 0) {
+							echo ', ';
+						}
+						?><a href="/user/profile/<?php echo $tagged->username; ?>"><?php echo $tagged->name; ?></a><?php
+					}
+					?>
+				</p>
+				<p>
+					<?php echo $post->content; ?>
+				</p>
+			</div>
+			<div class="col col-sm-2">
+				<?php
+				if(in_array(Profile::GetLoggedIn(), $post->likes)) {
+					?><a href="#" data-post-id="<?php echo $post->id; ?>" class="btn btn-success btn-xs pull-right already-liked like-btn" role="button" data-toggle="tooptip" title="You have already liked this"><i class="fa fa-thumbs-up"></i> <?php echo count($post->likes); ?></a><?php
+				} else {
+					?><a href="#" data-post-id="<?php echo $post->id; ?>" class="btn btn-success btn-xs pull-right like-btn" role="button"><i class="fa fa-thumbs-up"></i> <?php echo count($post->likes); ?></a><?php
+				}
+
+				if($post->posterProfile->username == Session::GetUsername()) {
+					?><a href="#" data-post-id="<?php echo $post->id; ?>" class="btn btn-danger btn-xs pull-right delete-post-btn" role="button"><i class="fa fa-trash"></i></a><?php
+				}
+				?>
+			</div>
+		</div>
+		<p class="text-left"><?php echo count($post->comments); ?> <?php echo pluralise("comment", count($post->comments)); ?></p>
+		<table class="table table-striped">
+			<?php
+			foreach($post->comments as $comment) {
+				?>
+				<tr>
+					<td><a href="/user/profile/<?php echo $comment->poster->username; ?>"><?php echo $comment->poster->name; ?></a>: <?php echo $comment->content; ?></td>
+				</tr>
+				<?php
+			}
+			?>
+		</table>
+		<form class="comment-form form-horizontal" data-postID="<?php echo $post->id; ?>" action="#" method="POST">
+			<input type="hidden" name="postID" value="<?php echo $post->id; ?>">
+			<div class="form-group form-group-sm">
+				<input type="text" class="form-control" name="content" placeholder="Comment @<?php echo $post->posterProfile->username; ?>...">
+			</div>
+		</form>
+	</div>
+</div>
